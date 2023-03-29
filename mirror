@@ -1,0 +1,35 @@
+#!/bin/sh
+
+set -e
+
+cd /opt/asahi-fedora
+
+echo ""
+echo "Downloading images..."
+
+REPO_BASE=https://asahi-fedora-remix.org
+PACKAGES=$(curl -s ${REPO_BASE}/installer_data.json | jq -r ' .os_list[]
+    | select((.package | split("-")[3] // split("-")[2] | split(".")[0]) >= "20230328")
+    | .package | split(".")[0]
+')
+
+cd ./os
+for PACKAGE in ${PACKAGES}; do
+    if [ ! -f ./${PACKAGE}.zip ]; then
+        echo "--> ${PACKAGE} downloading"
+        wget -nc ${REPO_BASE}/os/${PACKAGE}.zip
+    else
+        echo "--> ${PACKAGE} already present"
+    fi
+done
+cd ../
+
+tree ./os
+
+echo ""
+echo "Downloading install script"
+wget -qO install https://asahi-fedora-remix.org/install
+chmod +x ./install
+
+echo "Modifying install script"
+perl -pi -e 's#REPO_BASE=https.*#REPO_BASE=/opt/asahi-fedora#' install
