@@ -1,6 +1,6 @@
 # Asahi Fedora Remix Local Mirror
 
-Scripts to facilitate mirroring the images used to install both the stubOS and Asahi Fedora Remix locally.
+This project is basically a script which pre-fetches assets allowing the Asahi Fedora installer to run without repeatedly fetching assets from a remote CDN. Note however that network access is still required to successfully bless the boot volume at the end of the install process.
 
 ## Usage
 
