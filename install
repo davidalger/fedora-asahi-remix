@@ -11,6 +11,7 @@ export VERSION_FLAG=https://cdn.asahilinux.org/installer-dev/latest
 export INSTALLER_BASE=https://cdn.asahilinux.org/installer-dev
 export INSTALLER_DATA=https://asahi-fedora-remix.org/installer_data.json
 export REPO_BASE=/opt/asahi-fedora
+export IPSW_BASE="$REPO_BASE/ipsw"
 
 #TMP="$(mktemp -d)"
 TMP=/tmp/asahi-install

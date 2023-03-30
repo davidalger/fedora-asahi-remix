@@ -5,15 +5,23 @@ set -e
 cd /opt/asahi-fedora
 
 echo ""
-echo "Downloading images..."
+echo "Downloading install script"
+wget -q https://asahi-fedora-remix.org/install -O ./install
 
-REPO_BASE=https://asahi-fedora-remix.org
-PACKAGES=$(curl -s ${REPO_BASE}/installer_data.json | jq -r ' .os_list[]
+echo ""
+echo "Configuring script"
+echo ""
+eval $(grep -E 'export\W+(VERSION_FLAG|INSTALLER_BASE|INSTALLER_DATA|REPO_BASE)=' ./install | tee /dev/stderr)
+
+echo ""
+echo "Fetching packages"
+
+PACKAGES=$(curl -sL ${INSTALLER_DATA} | jq -r ' .os_list[]
     | select((.package | split("-")[3] // split("-")[2] | split(".")[0]) >= "20230328")
     | .package | split(".")[0]
 ')
 
-cd ./os
+mkdir -p ./os && cd ./os
 for PACKAGE in ${PACKAGES}; do
     if [ ! -f ./${PACKAGE}.zip ]; then
         echo "--> ${PACKAGE} downloading"
@@ -24,12 +32,16 @@ for PACKAGE in ${PACKAGES}; do
 done
 cd ../
 
-tree ./os
-
 echo ""
-echo "Downloading install script"
-wget -qO install https://asahi-fedora-remix.org/install
-chmod +x ./install
+echo "Fetching 12.3 firmware"
 
-echo "Modifying install script"
-perl -pi -e 's#REPO_BASE=https.*#REPO_BASE=/opt/asahi-fedora#' install
+# See the installer source for a list of URLs to firmware images
+# https://github.com/AsahiLinux/asahi-installer/blob/main/src/main.py#L46-L89
+
+mkdir -p ./ipsw && cd ./ipsw
+wget -nc https://updates.cdn-apple.com/2022SpringFCS/fullrestores/071-08757/74A4F2A1-C747-43F9-A22A-C0AD5FB4ECB6/UniversalMac_12.3_21E230_Restore.ipsw
+cd ../
+
+echo "Updating install script"
+perl -pi -e 's#REPO_BASE=https.*#REPO_BASE=/opt/asahi-fedora\nexport IPSW_BASE="\$REPO_BASE/ipsw"#' ./install
+chmod +x ./install
