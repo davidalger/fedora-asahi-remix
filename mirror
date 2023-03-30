@@ -2,7 +2,7 @@
 
 set -e
 
-cd /opt/asahi-fedora
+BASE_DIR=/opt/asahi-fedora-remix && cd "${BASE_DIR}"
 
 echo ""
 echo "Downloading install script"
@@ -49,5 +49,5 @@ done
 cd ../
 
 echo "Updating install script"
-perl -pi -e 's#REPO_BASE=https.*#REPO_BASE=/opt/asahi-fedora\nexport IPSW_BASE="\$REPO_BASE/ipsw"#' ./install
+perl -pi -e 's#REPO_BASE=https.*#REPO_BASE='"${BASE_DIR}"'\nexport IPSW_BASE="\$REPO_BASE/ipsw"#' ./install
 chmod +x ./install
