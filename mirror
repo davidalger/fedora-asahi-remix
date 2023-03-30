@@ -33,13 +33,19 @@ done
 cd ../
 
 echo ""
-echo "Fetching 12.3 firmware"
+echo "Fetching firmware for stubOS"
 
 # See the installer source for a list of URLs to firmware images
 # https://github.com/AsahiLinux/asahi-installer/blob/main/src/main.py#L46-L89
 
 mkdir -p ./ipsw && cd ./ipsw
-wget -nc https://updates.cdn-apple.com/2022SpringFCS/fullrestores/071-08757/74A4F2A1-C747-43F9-A22A-C0AD5FB4ECB6/UniversalMac_12.3_21E230_Restore.ipsw
+IPSW_IMAGES=(
+    https://updates.cdn-apple.com/2022SpringFCS/fullrestores/071-08757/74A4F2A1-C747-43F9-A22A-C0AD5FB4ECB6/UniversalMac_12.3_21E230_Restore.ipsw
+    https://updates.cdn-apple.com/2022FallFCS/fullrestores/012-92188/2C38BCD1-2BFF-4A10-B358-94E8E28BE805/UniversalMac_13.0_22A380_Restore.ipsw
+)
+for IPSW_IMAGE in "${IPSW_IMAGES[@]}"; do
+    wget -nc "${IPSW_IMAGE}"
+done
 cd ../
 
 echo "Updating install script"
