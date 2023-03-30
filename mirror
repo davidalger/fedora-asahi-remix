@@ -1,7 +1,7 @@
 #!/bin/sh
 # SPDX-License-Identifier: MIT
 
-set -e
+set -euo pipefail
 
 BASE_DIR=/opt/asahi-fedora-remix && cd "${BASE_DIR}"
 
@@ -12,12 +12,25 @@ wget -q https://asahi-fedora-remix.org/install -O ./install
 echo ""
 echo "Configuring script"
 echo ""
-eval $(grep -E 'export\W+(VERSION_FLAG|INSTALLER_BASE|INSTALLER_DATA|REPO_BASE)=' ./install | tee /dev/stderr)
+eval $(grep -E 'export\W+[A-Z]+_(FLAG|DATA|BASE)=' ./install | tee /dev/stderr)
+
+echo ""
+echo "Fetching installer"
+
+wget -q "${VERSION_FLAG}" -O ./installer_latest
+VERSION_FLAG="file://${BASE_DIR}/installer_latest"
+PKG_VER=$(cat ./installer_latest)
+wget -nc "${INSTALLER_BASE}/installer-${PKG_VER}.tar.gz"
+INSTALLER_BASE="file://${BASE_DIR}"
+
+echo "Fetching installer data"
+wget -q "${INSTALLER_DATA}" -O- | jq -r > ./installer_data.json
+INSTALLER_DATA="file://${BASE_DIR}/installer_data.json"
 
 echo ""
 echo "Fetching packages"
 
-PACKAGES=$(curl -sL ${INSTALLER_DATA} | jq -r ' .os_list[]
+PACKAGES=$(curl -s "${INSTALLER_DATA}" | jq -r '.os_list[]
     | select((.package | split("-")[3] // split("-")[2] | split(".")[0]) >= "20230328")
     | .package | split(".")[0]
 ')
@@ -31,6 +44,7 @@ for PACKAGE in ${PACKAGES}; do
         echo "--> ${PACKAGE} already present"
     fi
 done
+REPO_BASE="${BASE_DIR}"
 cd ../
 
 echo ""
@@ -50,5 +64,11 @@ done
 cd ../
 
 echo "Updating install script"
-perl -pi -e 's#REPO_BASE=https.*#REPO_BASE='"${BASE_DIR}"'\nexport IPSW_BASE="\$REPO_BASE/ipsw"#' ./install
+perl -pi -e 's#VERSION_FLAG=https.*#VERSION_FLAG='"${VERSION_FLAG}"'#' ./install
+perl -pi -e 's#INSTALLER_BASE=https.*#INSTALLER_BASE='"${INSTALLER_BASE}"'#' ./install
+perl -pi -e 's#INSTALLER_DATA=https.*#INSTALLER_DATA='"${INSTALLER_DATA}"'#' ./install
+perl -pi -e 's#REPO_BASE=https.*#REPO_BASE='"${REPO_BASE}"'\nexport IPSW_BASE="\$REPO_BASE/ipsw"#' ./install
 chmod +x ./install
+echo ""
+grep -E 'export\W+[A-Z]+_(FLAG|DATA|BASE)=' ./install
+echo ""
