@@ -3,6 +3,11 @@
 
 set -euo pipefail
 
+if ! which jq > /dev/null || ! which perl > /dev/null || ! which wget > /dev/null; then
+    >&2 printf "\033[31mERROR\033[0m: Missing one of the following dependencies: jq, wget, perl\n"
+    exit -1
+fi
+
 BASE_DIR=/opt/asahi-fedora-remix && cd "${BASE_DIR}"
 
 echo ""
