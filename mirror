@@ -8,16 +8,20 @@ if ! which jq > /dev/null || ! which perl > /dev/null || ! which wget > /dev/nul
     exit -1
 fi
 
+# Only mirror packages created on/after this date
+PKG_DATE=20230405
+
+# Where the scripts expect to be located
 BASE_DIR=/opt/asahi-fedora-remix && cd "${BASE_DIR}"
 
 echo ""
 echo "Downloading install script"
-wget -q https://asahi-fedora-remix.org/install -O ./install
+wget -q https://asahi-fedora-remix.org/install -O ./.install.tmp
 
 echo ""
 echo "Configuring script"
 echo ""
-eval $(grep -E 'export\W+[A-Z]+_(FLAG|DATA|BASE)=' ./install | tee /dev/stderr)
+eval $(grep -E 'export\W+[A-Z]+_(FLAG|DATA|BASE)=' ./.install.tmp | tee /dev/stderr)
 
 echo ""
 echo "Fetching installer"
@@ -30,7 +34,7 @@ INSTALLER_BASE="file://${BASE_DIR}"
 
 echo "Fetching installer data"
 wget -q "${INSTALLER_DATA}" -O- | jq -r '.os_list = [
-    .os_list[] | select((.package | split("-")[3] // split("-")[2] | split(".")[0]) >= "20230405")
+    .os_list[] | select((.package | split("-")[3] // split("-")[2] | split(".")[0]) >= "'"${PKG_DATE}"'")
 ]' > ./installer_data.json
 INSTALLER_DATA="file://${BASE_DIR}/installer_data.json"
 
@@ -67,11 +71,12 @@ done
 cd ../
 
 echo "Updating install script"
-perl -pi -e 's#VERSION_FLAG=https.*#VERSION_FLAG='"${VERSION_FLAG}"'#' ./install
-perl -pi -e 's#INSTALLER_BASE=https.*#INSTALLER_BASE='"${INSTALLER_BASE}"'#' ./install
-perl -pi -e 's#INSTALLER_DATA=https.*#INSTALLER_DATA='"${INSTALLER_DATA}"'#' ./install
-perl -pi -e 's#REPO_BASE=https.*#REPO_BASE='"${REPO_BASE}"'\nexport IPSW_BASE="\$REPO_BASE/ipsw"#' ./install
-chmod +x ./install
+perl -pi -e 's#VERSION_FLAG=https.*#VERSION_FLAG='"${VERSION_FLAG}"'#' ./.install.tmp
+perl -pi -e 's#INSTALLER_BASE=https.*#INSTALLER_BASE='"${INSTALLER_BASE}"'#' ./.install.tmp
+perl -pi -e 's#INSTALLER_DATA=https.*#INSTALLER_DATA='"${INSTALLER_DATA}"'#' ./.install.tmp
+perl -pi -e 's#REPO_BASE=https.*#REPO_BASE='"${REPO_BASE}"'\nexport IPSW_BASE="\$REPO_BASE/ipsw"#' ./.install.tmp
+chmod +x ./.install.tmp
 echo ""
+mv ./.install.tmp ./install
 grep -E 'export\W+[A-Z]+_(FLAG|DATA|BASE)=' ./install
 echo ""

@@ -1,3 +1,10 @@
+# Don't commit these files
+/installer_data.json
+/installer_latest
+/installer-v*
+
+# Don't commit these file types
+*.tmp
 *.gz
 *.ipsw
 *.tar
