@@ -1,11 +1,11 @@
 {
   "os_list": [
     {
-      "name": "Fedora Linux 38 with KDE",
-      "default_os_name": "Fedora Linux 38 with KDE",
+      "name": "Fedora Linux 38",
+      "default_os_name": "Fedora Linux 38",
       "boot_object": "m1n1.bin",
       "next_object": "m1n1/boot.bin",
-      "package": "fedora-38-kde-20230330.zip",
+      "package": "fedora-38-20230405.zip",
       "icon": "fedora.icns",
       "supported_fw": [
         "12.3",
@@ -18,7 +18,7 @@
           "type": "EFI",
           "size": "524288000B",
           "format": "fat",
-          "volume_id": "0x8f698ebc",
+          "volume_id": "0x3b114c52",
           "copy_firmware": true,
           "copy_installer_data": true,
           "source": "esp"
@@ -32,7 +32,45 @@
         {
           "name": "Root",
           "type": "Linux",
-          "size": "13245591552B",
+          "size": "10778292224B",
+          "expand": true,
+          "image": "root.img"
+        }
+      ]
+    },
+    {
+      "name": "Fedora Linux 38 with KDE",
+      "default_os_name": "Fedora Linux 38 with KDE",
+      "boot_object": "m1n1.bin",
+      "next_object": "m1n1/boot.bin",
+      "package": "fedora-38-kde-20230405.zip",
+      "icon": "fedora.icns",
+      "supported_fw": [
+        "12.3",
+        "12.3.1",
+        "12.4"
+      ],
+      "partitions": [
+        {
+          "name": "EFI",
+          "type": "EFI",
+          "size": "524288000B",
+          "format": "fat",
+          "volume_id": "0xeb57a552",
+          "copy_firmware": true,
+          "copy_installer_data": true,
+          "source": "esp"
+        },
+        {
+          "name": "Boot",
+          "type": "Linux",
+          "size": "1048576000B",
+          "image": "boot.img"
+        },
+        {
+          "name": "Root",
+          "type": "Linux",
+          "size": "13179531264B",
           "expand": true,
           "image": "root.img"
         }
@@ -43,7 +81,7 @@
       "default_os_name": "Fedora Linux 38 Server",
       "boot_object": "m1n1.bin",
       "next_object": "m1n1/boot.bin",
-      "package": "fedora-38-server-20230330.zip",
+      "package": "fedora-38-server-20230405.zip",
       "icon": "fedora.icns",
       "supported_fw": [
         "12.3",
@@ -56,7 +94,7 @@
           "type": "EFI",
           "size": "524288000B",
           "format": "fat",
-          "volume_id": "0x5cf137c4",
+          "volume_id": "0xaed96fa3",
           "copy_firmware": true,
           "copy_installer_data": true,
           "source": "esp"
@@ -70,7 +108,7 @@
         {
           "name": "Root",
           "type": "Linux",
-          "size": "4276072448B",
+          "size": "4216303616B",
           "expand": true,
           "image": "root.img"
         }
@@ -81,7 +119,7 @@
       "default_os_name": "Fedora Linux 38 Minimal",
       "boot_object": "m1n1.bin",
       "next_object": "m1n1/boot.bin",
-      "package": "fedora-38-minimal-20230330.zip",
+      "package": "fedora-38-minimal-20230405.zip",
       "icon": "fedora.icns",
       "supported_fw": [
         "12.3",
@@ -94,7 +132,7 @@
           "type": "EFI",
           "size": "524288000B",
           "format": "fat",
-          "volume_id": "0x347afc10",
+          "volume_id": "0x8fb56ed3",
           "copy_firmware": true,
           "copy_installer_data": true,
           "source": "esp"
@@ -108,45 +146,7 @@
         {
           "name": "Root",
           "type": "Linux",
-          "size": "3685724160B",
-          "expand": true,
-          "image": "root.img"
-        }
-      ]
-    },
-    {
-      "name": "Fedora Linux 38",
-      "default_os_name": "Fedora Linux 38",
-      "boot_object": "m1n1.bin",
-      "next_object": "m1n1/boot.bin",
-      "package": "fedora-38-20230329.zip",
-      "icon": "fedora.icns",
-      "supported_fw": [
-        "12.3",
-        "12.3.1",
-        "12.4"
-      ],
-      "partitions": [
-        {
-          "name": "EFI",
-          "type": "EFI",
-          "size": "524288000B",
-          "format": "fat",
-          "volume_id": "0x850157ce",
-          "copy_firmware": true,
-          "copy_installer_data": true,
-          "source": "esp"
-        },
-        {
-          "name": "Boot",
-          "type": "Linux",
-          "size": "1048576000B",
-          "image": "boot.img"
-        },
-        {
-          "name": "Root",
-          "type": "Linux",
-          "size": "10851692544B",
+          "size": "3622809600B",
           "expand": true,
           "image": "root.img"
         }

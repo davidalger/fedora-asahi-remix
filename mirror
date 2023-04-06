@@ -30,7 +30,7 @@ INSTALLER_BASE="file://${BASE_DIR}"
 
 echo "Fetching installer data"
 wget -q "${INSTALLER_DATA}" -O- | jq -r '.os_list = [
-    .os_list[] | select((.package | split("-")[3] // split("-")[2] | split(".")[0]) >= "20230329")
+    .os_list[] | select((.package | split("-")[3] // split("-")[2] | split(".")[0]) >= "20230405")
 ]' > ./installer_data.json
 INSTALLER_DATA="file://${BASE_DIR}/installer_data.json"
 
