@@ -9,14 +9,14 @@ if ! which jq > /dev/null || ! which perl > /dev/null || ! which wget > /dev/nul
 fi
 
 # Only mirror packages created on/after this date
-PKG_DATE=20230405
+PKG_DATE=20230501
 
 # Where the scripts expect to be located
-BASE_DIR=/opt/asahi-fedora-remix && cd "${BASE_DIR}"
+BASE_DIR=/opt/fedora-asahi-remix && cd "${BASE_DIR}"
 
 echo ""
 echo "Downloading install script"
-wget -q https://asahi-fedora-remix.org/install -O ./.install.tmp
+wget -q https://fedora-asahi-remix.org/install -O ./.install.tmp
 
 echo ""
 echo "Configuring script"

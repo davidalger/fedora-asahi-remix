@@ -7,10 +7,10 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export PATH="/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
-export VERSION_FLAG=file:///opt/asahi-fedora-remix/installer_latest
-export INSTALLER_BASE=file:///opt/asahi-fedora-remix
-export INSTALLER_DATA=file:///opt/asahi-fedora-remix/installer_data.json
-export REPO_BASE=/opt/asahi-fedora-remix
+export VERSION_FLAG=file:///opt/fedora-asahi-remix/installer_latest
+export INSTALLER_BASE=file:///opt/fedora-asahi-remix
+export INSTALLER_DATA=file:///opt/fedora-asahi-remix/installer_data.json
+export REPO_BASE=/opt/fedora-asahi-remix
 export IPSW_BASE="$REPO_BASE/ipsw"
 
 #TMP="$(mktemp -d)"
