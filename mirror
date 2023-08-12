@@ -9,7 +9,7 @@ if ! which jq > /dev/null || ! which perl > /dev/null || ! which wget > /dev/nul
 fi
 
 # Only mirror packages created on/after this date
-PKG_DATE=20230501
+PKG_DATE=20230807
 
 # Where the scripts expect to be located
 BASE_DIR=/opt/fedora-asahi-remix && cd "${BASE_DIR}"
@@ -63,7 +63,7 @@ echo "Fetching firmware for stubOS"
 
 mkdir -p ./ipsw && cd ./ipsw
 IPSW_IMAGES=(
-    https://updates.cdn-apple.com/2022SpringFCS/fullrestores/071-08757/74A4F2A1-C747-43F9-A22A-C0AD5FB4ECB6/UniversalMac_12.3_21E230_Restore.ipsw
+    https://updates.cdn-apple.com/2023SummerFCS/fullrestores/032-69606/D3E05CDF-E105-434C-A4A1-4E3DC7668DD0/UniversalMac_13.5_22G74_Restore.ipsw
 )
 for IPSW_IMAGE in "${IPSW_IMAGES[@]}"; do
     wget -nc "${IPSW_IMAGE}"

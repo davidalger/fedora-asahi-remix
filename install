@@ -12,6 +12,8 @@ export INSTALLER_BASE=file:///opt/fedora-asahi-remix
 export INSTALLER_DATA=file:///opt/fedora-asahi-remix/installer_data.json
 export REPO_BASE=/opt/fedora-asahi-remix
 export IPSW_BASE="$REPO_BASE/ipsw"
+export REPORT=https://stats.asahilinux.org/report
+export REPORT_TAG=fedora-prod
 
 #TMP="$(mktemp -d)"
 TMP=/tmp/asahi-install
