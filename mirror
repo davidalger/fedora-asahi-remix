@@ -8,9 +8,6 @@ if ! which jq > /dev/null || ! which perl > /dev/null || ! which wget > /dev/nul
     exit -1
 fi
 
-# Only mirror packages created on/after this date
-PKG_DATE=20230807
-
 # Where the scripts expect to be located
 BASE_DIR=/opt/fedora-asahi-remix && cd "${BASE_DIR}"
 
@@ -33,9 +30,32 @@ wget -nc "${INSTALLER_BASE}/installer-${PKG_VER}.tar.gz"
 INSTALLER_BASE="file://${BASE_DIR}"
 
 echo "Fetching installer data"
-wget -q "${INSTALLER_DATA}" -O- | jq -r '.os_list = [
+curl -s "${INSTALLER_DATA}" > ./.installer_data.json.tmp
+INSTALLER_DATA="file://${BASE_DIR}/.installer_data.json.tmp"
+
+echo "Finding latest packages"
+PKG_DATE=$(curl -s "${INSTALLER_DATA}" | jq -r '
+    (.os_list[] | .package | split("-")[3] // split("-")[2] | split(".")[0])[0:8]
+' | sort -un | tail -n1)
+echo ""
+
+echo "Filtering installer data"
+curl -s "${INSTALLER_DATA}" | jq -r '
     .os_list[] | select((.package | split("-")[3] // split("-")[2] | split(".")[0]) >= "'"${PKG_DATE}"'")
-]' > ./installer_data.json
+' > ./.installer_data.tmp
+
+# Include existing packages if still present in installer data
+if [[ -d ./os ]]; then
+    EXISTING_PACKAGES=$(ls -1t ./os)
+    for PACKAGE in ${EXISTING_PACKAGES}; do
+        if [[ $(cat ./.installer_data.tmp | jq -r 'select(.package == "'"${PACKAGE}"'")') == "" ]]; then
+            cat ./.installer_data.json.tmp | jq -r '.os_list[] | select(.package == "'"${PACKAGE}"'")' >> ./.installer_data.tmp
+        fi
+    done
+fi
+
+cat ./.installer_data.tmp | jq -sr '. = {os_list: .}' > ./installer_data.json
+rm ./.installer_data.json.tmp ./.installer_data.tmp
 INSTALLER_DATA="file://${BASE_DIR}/installer_data.json"
 
 echo ""
